@@ -125,6 +125,11 @@ void ArduinoGfx::init(int w, int h)
     tft                  = new Arduino_NV3041A(bus, TFT_RST, TFT_ROTATION, TFT_IPS);
     tft->begin(GFX_NOT_DEFINED); // Used for RFB displays
 
+#elif(TFT_WIDTH == 320) && (TFT_HEIGHT == 480) && defined(Arduino_AXS15231B)
+    Arduino_DataBus* bus = new Arduino_ESP32QSPI(TFT_CS, TFT_SCK, TFT_D0, TFT_D1, TFT_D2, TFT_D3);
+    tft                  = new Arduino_AXS15231B(bus, TFT_RST, TFT_ROTATION, TFT_IPS, TFT_WIDTH, TFT_HEIGHT);
+    tft->begin(GFX_NOT_DEFINED); // Used for RFB displays
+
 #elif 1
     /* Reset is not implemented in the panel */
     if(TFT_RST != GFX_NOT_DEFINED) {
@@ -447,6 +452,8 @@ const char* ArduinoGfx::get_tft_model()
     return "RM68140";
 #elif defined(NV3041A_DRIVER)
     return "NV3041A";
+#elif defined(AXS15231B_DRIVER)
+    return "AXS15231B";
 #else
     return "Other";
 #endif
@@ -486,6 +493,8 @@ uint32_t ArduinoGfx::get_tft_driver()
     return 0x68140;
 #elif defined(NV3041A_DRIVER)
     return 0x3041A;
+#elif defined(AXS15231B_DRIVER)
+    return 0x3041A; ; todo
 #else
     return 0x0;
 #endif
